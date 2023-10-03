@@ -3,19 +3,17 @@
 #include<vector>
 #include<windows.h>
 #include<cstdlib>
-#include<fstream>
-//#include<iostream>
 #include"json.hpp"
 
 using json=nlohmann::json;
 
 int main()
 {
-    const std::string path="config.json";
-    std::ifstream reader(path);
+    std::fstream reader("config.json");
     json j;
     reader>>j;
     reader.close();
+
     srand(time(NULL));
     std::vector<sf::RenderWindow*>Windows;
     sf::Texture texture[7];
@@ -26,11 +24,8 @@ int main()
     buffer.loadFromFile("intro.wav");
     sf::Sound sound;
     sound.setBuffer(buffer);
-    if(j["sound_lock"]==true)
-        system("start nircmd//nircmdc.exe setsysvolume 65534");
+    system("start nircmd//nircmdc.exe setsysvolume 65534");
     sound.setLoop(true);
-    Sleep(int(j["start_delay"])*100);
-    if(j["sound_play"]==true)
     sound.play();
     for(int i=0;i<7;i++)
     {
@@ -38,7 +33,7 @@ int main()
         texture[i].loadFromFile(file);
         sprite[i].setTexture(texture[i]);
     }
-    while(true)
+    while (true)
     {
         time=clock.getElapsedTime();
         if(time.asSeconds()>0.5)
@@ -55,8 +50,7 @@ int main()
         }
         if(Windows.size()>=100)
         {
-            if(j["turn_off"]==true)
-                system("shutdown -s");
+            //system("shutdown -s");
             exit(0);
         }
     }
